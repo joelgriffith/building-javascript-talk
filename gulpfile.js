@@ -12,6 +12,10 @@ var karma = require('gulp-karma');
 var appPort = 1337;
 var localtunnel = require('localtunnel');
 var gutil = require('gulp-util');
+var connect = require('gulp-connect');
+
+// Default Task
+gulp.task('default', ['js', 'css', 'img', 'html']);
 
 // JS packaging for distribution/dev/test
 gulp.task('js', function() {
@@ -19,7 +23,8 @@ gulp.task('js', function() {
 		.pipe(webpack(webpackConfig))
 		.pipe(gulp.dest('build/dev/js'))
 		.pipe(uglify())
-		.pipe(gulp.dest('build/dist/js'));
+		.pipe(gulp.dest('build/dist/js'))
+		.pipe(connect.reload());
 });
 
 // Stylesheets
@@ -30,6 +35,7 @@ gulp.task('css', function() {
 			browsers: ['last 5 versions']
 		}))
 		.pipe(gulp.dest('build/dev/css'))
+		.pipe(connect.reload())
 		.pipe(minifycss())
 		.pipe(gulp.dest('build/dist/css'));
 });
@@ -43,6 +49,7 @@ gulp.task('img', function() {
 			interlaced: true
 		}))
 		.pipe(gulp.dest('build/dev/img'))
+		.pipe(connect.reload())
 		.pipe(gulp.dest('build/dist/img'));
 });
 
@@ -50,6 +57,7 @@ gulp.task('img', function() {
 gulp.task('html', function() {
 	return gulp.src('src/*.html')
 		.pipe(gulp.dest('build/dev'))
+		.pipe(connect.reload())
 		.pipe(gulp.dest('build/dist'));
 });
 
@@ -75,5 +83,20 @@ gulp.task('tunnel', function(done) {
 		if (err) throw new Error('Local tunnel fell over: ' + err);
 		gutil.log(gutil.colors.green('App Tunnel at: ' + tunnel.url));
 		done();
+	});
+});
+
+// Watch Task with Live Reload
+gulp.task('watch', ['default', 'tunnel'], function() {
+
+	gulp.watch(['src/*.html'], ['html']);
+	gulp.watch(['src/**/*.js'], ['js']);
+	gulp.watch(['src/**/*.scss'], ['css']);
+	gulp.watch(['src/**/*.png', 'src/**/*.jpg', 'src/**/*.gif'], ['img']);
+
+	connect.server({
+		port: appPort,
+		root: 'build/dev',
+		livereload: true
 	});
 });
