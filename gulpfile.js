@@ -9,6 +9,9 @@ var imagemin = require('gulp-imagemin');
 var helpers = require('./gulp.helpers');
 var argv = require('yargs').argv;
 var karma = require('gulp-karma');
+var appPort = 1337;
+var localtunnel = require('localtunnel');
+var gutil = require('gulp-util');
 
 // JS packaging for distribution/dev/test
 gulp.task('js', function() {
@@ -63,4 +66,14 @@ gulp.task('test', function() {
 			configFile: 'karma.conf.js',
 			action: (argv.watch) ? 'watch' : 'run'
 		}));
+});
+
+// Opens up local apps to outside traffic, prints URL in CLI
+gulp.task('tunnel', function(done) {
+
+	localtunnel(appPort, function(err, tunnel) {
+		if (err) throw new Error('Local tunnel fell over: ' + err);
+		gutil.log(gutil.colors.green('App Tunnel at: ' + tunnel.url));
+		done();
+	});
 });
