@@ -5,6 +5,7 @@ var uglify = require('gulp-uglify');
 var autoprefixer = require('gulp-autoprefixer');
 var sass = require('gulp-sass');
 var minifycss = require('gulp-minify-css');
+var imagemin = require('gulp-imagemin');
 
 // JS packaging for distribution/dev/test
 gulp.task('js', function() {
@@ -25,4 +26,16 @@ gulp.task('css', function() {
 		.pipe(gulp.dest('build/dev/css'))
 		.pipe(minifycss())
 		.pipe(gulp.dest('build/dist/css'));
+});
+
+// Image minification
+gulp.task('img', function() {
+	return gulp.src(['src/img/*.png', 'src/img/*.jpg', 'src/img/*.gif'])
+		.pipe(imagemin({
+			optimizationLevel: 3,
+			progressive: true,
+			interlaced: true
+		}))
+		.pipe(gulp.dest('build/dev/img'))
+		.pipe(gulp.dest('build/dist/img'));
 });
