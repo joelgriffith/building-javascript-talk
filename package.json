@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Front-end build that let's you do CI testing, deploying, and editing.",
   "main": "src/index.js",
-  "repository": "",
+  "repository": "https://github.com/joelgriffith/building-javascript-talk.git",
   "author": [
     "joel griffith"
   ],
