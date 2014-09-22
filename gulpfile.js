@@ -39,3 +39,10 @@ gulp.task('img', function() {
 		.pipe(gulp.dest('build/dev/img'))
 		.pipe(gulp.dest('build/dist/img'));
 });
+
+// Moving HTML over
+gulp.task('html', function() {
+	return gulp.src('src/*.html')
+		.pipe(gulp.dest('build/dev'))
+		.pipe(gulp.dest('build/dist'));
+});
