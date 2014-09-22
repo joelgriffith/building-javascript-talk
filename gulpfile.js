@@ -6,6 +6,9 @@ var autoprefixer = require('gulp-autoprefixer');
 var sass = require('gulp-sass');
 var minifycss = require('gulp-minify-css');
 var imagemin = require('gulp-imagemin');
+var helpers = require('./gulp.helpers');
+var argv = require('yargs').argv;
+var karma = require('gulp-karma');
 
 // JS packaging for distribution/dev/test
 gulp.task('js', function() {
@@ -45,4 +48,19 @@ gulp.task('html', function() {
 	return gulp.src('src/*.html')
 		.pipe(gulp.dest('build/dev'))
 		.pipe(gulp.dest('build/dist'));
+});
+
+// Karma Continuous Testing
+// Pass your browsers by using --browser=chrome,firefox,ie9
+// Run CI by passing --watch
+gulp.task('test', function() {
+	var defaultBrowsers = ['Chrome'];
+	var browserArgs = helpers.parseBrowserArgs(argv).map(helpers.toCapitalCase);
+
+	return gulp.src('lookAtKarmaConfJS')
+		.pipe(karma({
+			browsers: (browserArgs.length > 0) ? browserArgs : defaultBrowsers,
+			configFile: 'karma.conf.js',
+			action: (argv.watch) ? 'watch' : 'run'
+		}));
 });
