@@ -13,6 +13,7 @@ var appPort = 1337;
 var localtunnel = require('localtunnel');
 var gutil = require('gulp-util');
 var connect = require('gulp-connect');
+var notify = require('gulp-notify');
 
 // Default Task
 gulp.task('default', ['js', 'css', 'img', 'html']);
@@ -24,7 +25,8 @@ gulp.task('js', function() {
 		.pipe(gulp.dest('build/dev/js'))
 		.pipe(uglify())
 		.pipe(gulp.dest('build/dist/js'))
-		.pipe(connect.reload());
+		.pipe(connect.reload())
+		.pipe(notify('Your JavaScript is done!'));
 });
 
 // Stylesheets
@@ -37,7 +39,8 @@ gulp.task('css', function() {
 		.pipe(gulp.dest('build/dev/css'))
 		.pipe(connect.reload())
 		.pipe(minifycss())
-		.pipe(gulp.dest('build/dist/css'));
+		.pipe(gulp.dest('build/dist/css'))
+		.pipe(notify('CSS...pre-processed!'));
 });
 
 // Image minification
@@ -50,7 +53,8 @@ gulp.task('img', function() {
 		}))
 		.pipe(gulp.dest('build/dev/img'))
 		.pipe(connect.reload())
-		.pipe(gulp.dest('build/dist/img'));
+		.pipe(gulp.dest('build/dist/img'))
+		.pipe(notify('Compressed are the images!'));
 });
 
 // Moving HTML over
@@ -58,7 +62,8 @@ gulp.task('html', function() {
 	return gulp.src('src/*.html')
 		.pipe(gulp.dest('build/dev'))
 		.pipe(connect.reload())
-		.pipe(gulp.dest('build/dist'));
+		.pipe(gulp.dest('build/dist'))
+		.pipe(notify('Your HTML has moved over'));
 });
 
 // Karma Continuous Testing
